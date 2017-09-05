@@ -5,7 +5,8 @@
     <color name="colorAccent">#FF4081</color>-->
 
     <!-- Cativo color definition -->
-    <color name="cativoColorBorder">#c1b508</color>
+    <color name="cativoColorYellow">#c1b508</color>
+    <color name="cativoColorGreen">#FF80CBC4</color>
 </resources>
 
 

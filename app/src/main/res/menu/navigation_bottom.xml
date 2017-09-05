@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      tools:context=".activities.BaseActivity">
+            <item
+                android:id="@+id/navigation_bot_profile"
+                android:icon="@drawable/profile_white_24"
+                android:title="@string/title_profile"
+                />
+
+            <item
+                android:id="@+id/navigation_bot_explore"
+                android:icon="@drawable/explore_white_24"
+                android:title="@string/title_explore"
+                />
+
+            <item
+                android:id="@+id/navigation_bot_watch"
+                android:icon="@drawable/watch_white_24"
+                android:title="@string/title_watch"
+                />
+
+            <item
+                android:id="@+id/navigation_bot_calendar"
+                android:icon="@drawable/calendar_white_24"
+                android:title="@string/title_calendar"
+                />
+
+            <item
+                android:id="@+id/navigation_bot_settings"
+                android:icon="@drawable/settings_white_24"
+                android:title="@string/title_settings"
+                />
+
+</menu>

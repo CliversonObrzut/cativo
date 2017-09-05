@@ -1,13 +1,23 @@
 package ait.cativoapp;
 
+
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
 {
+
+    private Toolbar toolbar;
+    private TextView toolbarTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -15,15 +25,57 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
         setSupportActionBar(toolbar);
 
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        // TODO: Set Cativo logo after designed
         getSupportActionBar().setIcon(R.drawable.cativo_logo_24px);
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener
+                (new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        Fragment selectedFragment = null;
+                        switch (item.getItemId()) {
+                            case R.id.navigation_bot_profile:
+                                toolbarTitle.setText(R.string.title_profile);
+                                selectedFragment = NavbotProfileFragment.newInstance();
+                                break;
+                            case R.id.navigation_bot_explore:
+                                toolbarTitle.setText(R.string.title_explore);
+                                selectedFragment = NavbotExploreFragment.newInstance();
+                                break;
+                            case R.id.navigation_bot_watch:
+                                toolbarTitle.setText(R.string.title_watch);
+                                selectedFragment = NavbotWatchFragment.newInstance();
+                                break;
+                            case R.id.navigation_bot_calendar:
+                                toolbarTitle.setText(R.string.title_calendar);
+                                selectedFragment = NavbotCalendarFragment.newInstance();
+                                break;
+                            case R.id.navigation_bot_settings:
+                                toolbarTitle.setText(R.string.title_settings);
+                                selectedFragment = NavbotSettingsFragment.newInstance();
+                                break;
+
+                        }
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.frame_layout, selectedFragment);
+                        transaction.commit();
+                        return true;
+                    }
+                });
+
+        //Manually displaying the first fragment - one time only
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_layout, NavbotProfileFragment.newInstance());
+        transaction.commit();
     }
 
     @Override
@@ -32,5 +84,41 @@ public class MainActivity extends AppCompatActivity
         // create menu from xml to java objects, add to menu (parent group)
         getMenuInflater().inflate(R.menu.navigation, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        Fragment selectedFragment = null;
+        switch (item.getItemId())
+        {
+            case R.id.navigation_profile:
+                toolbarTitle.setText(R.string.title_profile);
+                selectedFragment = NavbotProfileFragment.newInstance();
+                break;
+            case R.id.navigation_explore:
+                toolbarTitle.setText(R.string.title_explore);
+                selectedFragment = NavbotExploreFragment.newInstance();
+                break;
+            case R.id.navigation_watch:
+                toolbarTitle.setText(R.string.title_watch);
+                selectedFragment = NavbotWatchFragment.newInstance();
+                break;
+            case R.id.navigation_calendar:
+                toolbarTitle.setText(R.string.title_calendar);
+                selectedFragment = NavbotCalendarFragment.newInstance();
+                break;
+            case R.id.navigation_settings:
+                toolbarTitle.setText(R.string.title_settings);
+                selectedFragment = NavbotSettingsFragment.newInstance();
+                break;
+            case R.id.navigation_logout:
+                finish();
+                break;
+        }
+/*        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_layout, selectedFragment);
+        transaction.commit();*/
+        return super.onOptionsItemSelected(item);
     }
 }
