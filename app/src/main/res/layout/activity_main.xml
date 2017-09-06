@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:animateLayoutChanges="true"
+            android:animateLayoutChanges="false"
             android:background="@android:color/black"
             app:itemTextColor="@color/cativoColorGreen"
             app:itemIconTint="@color/cativoColorGreen"

@@ -18,6 +18,8 @@ public class MainActivity extends AppCompatActivity
 
     private Toolbar toolbar;
     private TextView toolbarTitle;
+    private BottomNavigationView bottomNavigationView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity
 
         getSupportActionBar().setIcon(R.drawable.cativo_logo_24px);
 
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
 
         bottomNavigationView.setOnNavigationItemSelectedListener
                 (new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -89,36 +91,44 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        Fragment selectedFragment = null;
-        switch (item.getItemId())
+        if (item.getItemId() != R.id.toolbar_menu)
         {
-            case R.id.navigation_profile:
-                toolbarTitle.setText(R.string.title_profile);
-                selectedFragment = NavbotProfileFragment.newInstance();
-                break;
-            case R.id.navigation_explore:
-                toolbarTitle.setText(R.string.title_explore);
-                selectedFragment = NavbotExploreFragment.newInstance();
-                break;
-            case R.id.navigation_watch:
-                toolbarTitle.setText(R.string.title_watch);
-                selectedFragment = NavbotWatchFragment.newInstance();
-                break;
-            case R.id.navigation_calendar:
-                toolbarTitle.setText(R.string.title_calendar);
-                selectedFragment = NavbotCalendarFragment.newInstance();
-                break;
-            case R.id.navigation_settings:
-                toolbarTitle.setText(R.string.title_settings);
-                selectedFragment = NavbotSettingsFragment.newInstance();
-                break;
-            case R.id.navigation_logout:
-                finish();
-                break;
+            Fragment selectedFragment = null;
+            switch (item.getItemId())
+            {
+                case R.id.navigation_profile:
+                    toolbarTitle.setText(R.string.title_profile);
+                    bottomNavigationView.setSelectedItemId(R.id.navigation_bot_profile);
+                    selectedFragment = NavbotProfileFragment.newInstance();
+                    break;
+                case R.id.navigation_explore:
+                    toolbarTitle.setText(R.string.title_explore);
+                    bottomNavigationView.setSelectedItemId(R.id.navigation_bot_explore);
+                    selectedFragment = NavbotExploreFragment.newInstance();
+                    break;
+                case R.id.navigation_watch:
+                    toolbarTitle.setText(R.string.title_watch);
+                    bottomNavigationView.setSelectedItemId(R.id.navigation_bot_watch);
+                    selectedFragment = NavbotWatchFragment.newInstance();
+                    break;
+                case R.id.navigation_calendar:
+                    toolbarTitle.setText(R.string.title_calendar);
+                    bottomNavigationView.setSelectedItemId(R.id.navigation_bot_calendar);
+                    selectedFragment = NavbotCalendarFragment.newInstance();
+                    break;
+                case R.id.navigation_settings:
+                    toolbarTitle.setText(R.string.title_settings);
+                    bottomNavigationView.setSelectedItemId(R.id.navigation_bot_settings);
+                    selectedFragment = NavbotSettingsFragment.newInstance();
+                    break;
+                case R.id.navigation_logout:
+                    finish();
+                    break;
+            }
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_layout, selectedFragment);
+            transaction.commit();
         }
-/*        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, selectedFragment);
-        transaction.commit();*/
         return super.onOptionsItemSelected(item);
     }
 }
