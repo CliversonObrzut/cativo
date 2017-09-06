@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
@@ -47,23 +46,23 @@ public class MainActivity extends AppCompatActivity
                         switch (item.getItemId()) {
                             case R.id.navigation_bot_profile:
                                 toolbarTitle.setText(R.string.title_profile);
-                                selectedFragment = NavbotProfileFragment.newInstance();
+                                selectedFragment = ProfileFragment.newInstance();
                                 break;
                             case R.id.navigation_bot_explore:
                                 toolbarTitle.setText(R.string.title_explore);
-                                selectedFragment = NavbotExploreFragment.newInstance();
+                                selectedFragment = ExploreFragment.newInstance();
                                 break;
                             case R.id.navigation_bot_watch:
                                 toolbarTitle.setText(R.string.title_watch);
-                                selectedFragment = NavbotWatchFragment.newInstance();
+                                selectedFragment = WatchFragment.newInstance();
                                 break;
                             case R.id.navigation_bot_calendar:
                                 toolbarTitle.setText(R.string.title_calendar);
-                                selectedFragment = NavbotCalendarFragment.newInstance();
+                                selectedFragment = CalendarFragment.newInstance();
                                 break;
                             case R.id.navigation_bot_settings:
                                 toolbarTitle.setText(R.string.title_settings);
-                                selectedFragment = NavbotSettingsFragment.newInstance();
+                                selectedFragment = SettingsFragment.newInstance();
                                 break;
 
                         }
@@ -76,7 +75,7 @@ public class MainActivity extends AppCompatActivity
 
         //Manually displaying the first fragment - one time only
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, NavbotProfileFragment.newInstance());
+        transaction.replace(R.id.frame_layout, ProfileFragment.newInstance());
         transaction.commit();
     }
 
@@ -99,27 +98,27 @@ public class MainActivity extends AppCompatActivity
                 case R.id.navigation_profile:
                     toolbarTitle.setText(R.string.title_profile);
                     bottomNavigationView.setSelectedItemId(R.id.navigation_bot_profile);
-                    selectedFragment = NavbotProfileFragment.newInstance();
+                    selectedFragment = ProfileFragment.newInstance();
                     break;
                 case R.id.navigation_explore:
                     toolbarTitle.setText(R.string.title_explore);
                     bottomNavigationView.setSelectedItemId(R.id.navigation_bot_explore);
-                    selectedFragment = NavbotExploreFragment.newInstance();
+                    selectedFragment = ExploreFragment.newInstance();
                     break;
                 case R.id.navigation_watch:
                     toolbarTitle.setText(R.string.title_watch);
                     bottomNavigationView.setSelectedItemId(R.id.navigation_bot_watch);
-                    selectedFragment = NavbotWatchFragment.newInstance();
+                    selectedFragment = WatchFragment.newInstance();
                     break;
                 case R.id.navigation_calendar:
                     toolbarTitle.setText(R.string.title_calendar);
                     bottomNavigationView.setSelectedItemId(R.id.navigation_bot_calendar);
-                    selectedFragment = NavbotCalendarFragment.newInstance();
+                    selectedFragment = CalendarFragment.newInstance();
                     break;
                 case R.id.navigation_settings:
                     toolbarTitle.setText(R.string.title_settings);
                     bottomNavigationView.setSelectedItemId(R.id.navigation_bot_settings);
-                    selectedFragment = NavbotSettingsFragment.newInstance();
+                    selectedFragment = SettingsFragment.newInstance();
                     break;
                 case R.id.navigation_logout:
                     finish();
