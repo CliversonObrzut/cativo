@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="110dp"
+              android:layout_marginTop="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:id="@+id/search_result_relativeLayout"
+        >
+        <View
+            android:id="@+id/search_result_img_back"
+            android:layout_width="70dp"
+            android:layout_height="95dp"
+            android:scaleType="fitXY"
+            android:background="@color/cativoColorGreen"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="5dp"
+            />
+        <ImageView
+            android:id="@+id/search_result_img"
+            android:layout_width="65dp"
+            android:layout_height="90dp"
+            android:scaleType="fitXY"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="7.5dp"
+            android:src="@drawable/the_big_bang_theory"
+            />
+        <ImageButton
+            android:id="@+id/search_result_favimg"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@android:color/black"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="5dp"
+            android:src="@drawable/star_filled_white"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center|left"
+            android:layout_toRightOf="@id/search_result_img"
+            android:layout_toLeftOf="@id/search_result_favimg"
+            android:layout_marginLeft="5dp"
+            android:padding="10dp"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/search_result_serieName"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="10pt"
+                    android:textStyle="bold"
+                    android:text="The Big Bang Theory"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="3dp"
+                >
+                <TextView
+                    android:id="@+id/search_result_rate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="8pt"
+                    android:text="Rating: 8.3"
+                    android:textStyle="italic"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="3dp"
+                >
+                <TextView
+                    android:id="@+id/search_result_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="8pt"
+                    android:text="Active"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>
