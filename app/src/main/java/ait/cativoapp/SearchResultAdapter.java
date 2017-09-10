@@ -35,12 +35,14 @@ public class SearchResultAdapter extends ArrayAdapter<SearchResult>
         ImageView rowImage = (ImageView) view.findViewById(R.id.search_result_img);
         TextView rowName = (TextView) view.findViewById(R.id.search_result_serieName);
         TextView rowRate = (TextView) view.findViewById(R.id.search_result_rate);
+        TextView rowCountry = (TextView) view.findViewById(R.id.search_result_country);
         TextView rowStatus = (TextView) view.findViewById(R.id.search_result_status);
 
         SearchResult sr = getItem(position);
 
         rowName.setText(sr.getName());
         rowRate.setText("Rate: " + sr.getRate());
+        rowCountry.setText(sr.getCountry());
         rowStatus.setText(sr.getStatus());
         rowImage.setImageBitmap(sr.getImageBitmap());
 

@@ -19,8 +19,6 @@ public class MainActivity extends AppCompatActivity
     private Toolbar toolbar;
     private TextView toolbarTitle;
     private BottomNavigationView bottomNavigationView;
-    private ListView searchResult;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -28,7 +26,6 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        searchResult = (ListView) findViewById(R.id.search_list_view);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
         setSupportActionBar(toolbar);
