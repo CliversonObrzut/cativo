@@ -59,11 +59,10 @@
         android:layout_marginRight="0dp"
         android:animateLayoutChanges="true"
         android:background="@android:color/black"
-        app:itemIconTint="@color/cativoColorGreen"
-        app:itemTextColor="@color/cativoColorGreen"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.951"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/navigation_bottom"/>
+        app:menu="@menu/navigation_bottom"
+        />
 </android.support.constraint.ConstraintLayout>

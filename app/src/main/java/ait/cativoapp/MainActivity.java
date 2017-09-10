@@ -1,7 +1,11 @@
 package ait.cativoapp;
 
 
+import android.content.res.ColorStateList;
+import android.content.res.XmlResourceParser;
 import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationItemView;
+import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +16,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.lang.reflect.Field;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -37,7 +43,9 @@ public class MainActivity extends AppCompatActivity
         getSupportActionBar().setIcon(R.drawable.cativo_logo_24px);
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
-
+        disableShiftMode(bottomNavigationView);
+        bottomNavigationView.setItemTextColor(getResources().getColorStateList(R.color.bottom_menu_color));
+        bottomNavigationView.setItemIconTintList(getResources().getColorStateList(R.color.bottom_menu_color));
         bottomNavigationView.setOnNavigationItemSelectedListener
                 (new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -129,5 +137,32 @@ public class MainActivity extends AppCompatActivity
             transaction.commit();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public static void disableShiftMode(BottomNavigationView view)
+    {
+        BottomNavigationMenuView menuView = (BottomNavigationMenuView) view.getChildAt(0);
+        try
+        {
+            Field shiftingMode = menuView.getClass().getDeclaredField("mShiftingMode");
+            shiftingMode.setAccessible(true);
+            shiftingMode.setBoolean(menuView, false);
+            shiftingMode.setAccessible(false);
+            for (int i = 0; i < menuView.getChildCount(); i++)
+            {
+                BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(i);
+                item.setShiftingMode(false);
+                // set once again checked value, so view will be updated
+                item.setChecked(item.getItemData().isChecked());
+            }
+        }
+        catch (NoSuchFieldException e)
+        {
+            //Timber.e(e, "Unable to get shift mode field");
+        }
+        catch (IllegalAccessException e)
+        {
+            //Timber.e(e, "Unable to change value of shift mode");
+        }
     }
 }

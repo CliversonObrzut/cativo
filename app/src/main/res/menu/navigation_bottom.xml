@@ -7,30 +7,35 @@
                 android:id="@+id/navigation_bot_profile"
                 android:icon="@drawable/profile_white_24"
                 android:title="@string/title_profile"
+                app:showAsAction="ifRoom|withText"
                 />
 
             <item
                 android:id="@+id/navigation_bot_explore"
                 android:icon="@drawable/explore_white_24"
                 android:title="@string/title_explore"
+                app:showAsAction="ifRoom|withText"
                 />
 
             <item
                 android:id="@+id/navigation_bot_watch"
                 android:icon="@drawable/watch_white_24"
                 android:title="@string/title_watch"
+                app:showAsAction="ifRoom|withText"
                 />
 
             <item
                 android:id="@+id/navigation_bot_calendar"
                 android:icon="@drawable/calendar_white_24"
                 android:title="@string/title_calendar"
+                app:showAsAction="ifRoom|withText"
                 />
 
             <item
                 android:id="@+id/navigation_bot_settings"
                 android:icon="@drawable/settings_white_24"
                 android:title="@string/title_settings"
+                app:showAsAction="ifRoom|withText"
                 />
 
 </menu>

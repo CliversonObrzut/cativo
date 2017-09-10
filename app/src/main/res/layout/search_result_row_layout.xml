@@ -33,12 +33,14 @@
             />
         <ImageButton
             android:id="@+id/search_result_favimg"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:scaleType="fitXY"
             android:background="@android:color/black"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"
+            android:focusableInTouchMode="true"
             android:src="@drawable/star_filled_white"
             />
         <LinearLayout

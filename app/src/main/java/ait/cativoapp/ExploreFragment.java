@@ -10,11 +10,14 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -160,10 +163,13 @@ public class ExploreFragment extends Fragment
                         if(rate == "null")
                             rate = "n/a";
 
-                        String country = object.getJSONObject("show")
-                                            .getJSONObject("network")
-                                            .getJSONObject("country")
-                                            .getString("name");
+                        String country = "Country n/a";
+                        if(!object.getJSONObject("show").isNull("network"))
+                            if(!object.getJSONObject("show").getJSONObject("network").isNull("country"))
+                                country = object.getJSONObject("show").getJSONObject("network").getJSONObject("country").getString("name");
+                        else if(!object.getJSONObject("show").isNull("webChannel"))
+                            if(!object.getJSONObject("show").getJSONObject("webChannel").isNull("country"))
+                                country = object.getJSONObject("show").getJSONObject("webChannel").getJSONObject("country").getString("name");
                         if(country == "null")
                             country = "Country n/a";
 
@@ -243,34 +249,6 @@ public class ExploreFragment extends Fragment
             return imageBmp;
         }
 
-        protected void onPostExecute(Bitmap result)
-        {
-/*            for (SearchResult item:resultList)
-            {
-                if(item.getId() == sr.getId())
-                {
-                    item.setImageBitmap(result);
-                    //item.setComplete(true);
-                    break;
-                }
-            }*/
-
-/*            int count = 0;
-            for (SearchResult item:resultList)
-            {
-                if(item.isComplete())
-                {
-                    count++;
-                }
-            }
-            if (count == resultList.size())
-            {
-                SearchResultAdapter adapter = new SearchResultAdapter(getContext(), resultList);
-                searchResultList.setAdapter(adapter);
-                searchResultProgressBar.setVisibility(View.GONE);
-                searchResultLabel.setVisibility(View.VISIBLE);
-                searchResultList.setVisibility(View.VISIBLE);
-            }*/
-        }
+        protected void onPostExecute(Bitmap result){}
     }
 }
