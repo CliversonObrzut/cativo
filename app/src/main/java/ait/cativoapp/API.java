@@ -8,8 +8,9 @@ public class API
 {
     private String apiRroot = "http://api.tvmaze.com";
 
-    private String apiSearch = "/search/shows?q=:";
-    private String apiSingleSearch = "/singlesearch/shows?q=:";
+    private String apiSearch = "/search/shows?q=";
+    private String apiSingleSearch = "/singlesearch/shows?q=";
+    private String apiSearchShowById = "/shows/";
 
     public String Search(String query)
     {
@@ -19,5 +20,10 @@ public class API
     public String SingleSearch(String query)
     {
         return apiRroot + apiSingleSearch + query;
+    }
+
+    public String SearchShowById(String id)
+    {
+        return apiRroot + apiSearchShowById + id;
     }
 }

@@ -1,8 +1,8 @@
 package ait.cativoapp;
 
 
-import android.content.res.ColorStateList;
-import android.content.res.XmlResourceParser;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
@@ -10,18 +10,16 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
 
 public class MainActivity extends AppCompatActivity
 {
-
+    public static SQLiteDatabase seriesDB = null;
     private Toolbar toolbar;
     private TextView toolbarTitle;
     private BottomNavigationView bottomNavigationView;
@@ -31,6 +29,8 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        DB.CreateDatabase(getApplicationContext());
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity
                         }
                         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.frame_layout, selectedFragment);
+                        transaction.addToBackStack(null);
                         transaction.commit();
                         return true;
                     }
@@ -84,6 +85,7 @@ public class MainActivity extends AppCompatActivity
         //Manually displaying the first fragment - one time only
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, ProfileFragment.newInstance());
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 
@@ -134,9 +136,10 @@ public class MainActivity extends AppCompatActivity
             }
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.frame_layout, selectedFragment);
+            transaction.addToBackStack(null);
             transaction.commit();
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     public static void disableShiftMode(BottomNavigationView view)
@@ -164,5 +167,19 @@ public class MainActivity extends AppCompatActivity
         {
             //Timber.e(e, "Unable to change value of shift mode");
         }
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        try
+        {
+            DB.seriesDB.close();
+        }
+        catch (Exception e)
+        {
+            // nothing
+        }
+        super.onDestroy();
     }
 }

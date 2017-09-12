@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_marginLeft="20dp"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:orientation="vertical">
+        <ImageButton
+            android:id="@+id/profile_my_series_img"
+            android:layout_width="108dp"
+            android:layout_height="150dp"
+            android:background="@color/cativoColorGreen"
+            android:src="@drawable/defenders"
+            android:scaleType="fitXY"
+            />
+        <TextView
+            android:id="@+id/profile_my_series_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center|top"
+            android:textColor="@color/cativoColorGreen"
+            android:text="Defenders"
+            android:textSize="7pt"/>
+    </LinearLayout>
+</LinearLayout>

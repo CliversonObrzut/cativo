@@ -3,29 +3,21 @@ package ait.cativoapp;
 import android.graphics.Bitmap;
 
 /**
- * Created by Ana&Cliver on 07/09/2017.
+ * Created by Cliver on 12/09/2017.
  */
 
-public class SearchResult
+public class MySeries
 {
     private String id;
     private String name;
-    private String status;
     private String imageUrl;
-    private String rate;
-    private String country;
     private Bitmap imageBitmap = null;
-    private boolean isFavorite = false;
 
-    public SearchResult(String id, String name, String rate, String country, String status, String imageUrl)
+    public MySeries(String id, String name, String imageUrl)
     {
         this.id = id;
         this.name = name;
-        this.rate = rate;
-        this.country = country;
-        this.status = status;
         this.imageUrl = imageUrl;
-
     }
 
     public String getId()
@@ -38,24 +30,9 @@ public class SearchResult
         return name;
     }
 
-    public String getCountry()
-    {
-        return country;
-    }
-
-    public String getStatus()
-    {
-        return status;
-    }
-
     public String getImageUrl()
     {
         return imageUrl;
-    }
-
-    public String getRate()
-    {
-        return rate;
     }
 
     public Bitmap getImageBitmap()
@@ -73,13 +50,4 @@ public class SearchResult
         this.imageBitmap = imageBitmap;
     }
 
-    public boolean isFavorite()
-    {
-        return isFavorite;
-    }
-
-    public void setFavorite(boolean favorite)
-    {
-        isFavorite = favorite;
-    }
 }

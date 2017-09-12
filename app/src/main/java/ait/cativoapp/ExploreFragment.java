@@ -6,23 +6,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -71,6 +65,9 @@ public class ExploreFragment extends Fragment
                 public boolean onQueryTextSubmit(String s)
                 {
                     resultList = new ArrayList<SearchResult>();
+                    searchResultLabel.setVisibility(View.GONE);
+                    searchResultList.setVisibility(View.GONE);
+                    searchResultProgressBar.setVisibility(View.VISIBLE);
                     new ApiSearchSerie().execute();
                     return false;
                 }
@@ -98,9 +95,7 @@ public class ExploreFragment extends Fragment
 
         protected void onPreExecute()
         {
-            searchResultLabel.setVisibility(View.GONE);
-            searchResultList.setVisibility(View.GONE);
-            searchResultProgressBar.setVisibility(View.VISIBLE);
+
         }
 
         protected String doInBackground(Void... urls)
@@ -187,6 +182,9 @@ public class ExploreFragment extends Fragment
                         SearchResult sr = new SearchResult(id, name, rate, country, status, imageURL);
                         if(sr.getImageUrl() == "")
                             sr.setImageUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/No_image_available_400_x_600.svg/2000px-No_image_available_400_x_600.svg.png");
+
+                        if(DB.isSerieFavorite(id))
+                            sr.setFavorite(true);
                         resultList.add(sr);
                     }
 
