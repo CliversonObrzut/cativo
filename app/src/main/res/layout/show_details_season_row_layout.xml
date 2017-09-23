@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="40dp"
+              android:clickable="true"
+              android:background="@drawable/season_row_layout_background"
+              android:descendantFocusability="blocksDescendants">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:clickable="true"
+            >
+            <TextView
+                android:id="@+id/show_details_seasonNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                android:textSize="7pt"
+                android:textStyle="bold"
+                android:text="Season 1"
+                />
+            <TextView
+                android:id="@+id/show_details_episodesQty"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                android:textSize="7pt"
+                android:gravity="right"
+                android:text="24 Episodes"
+                android:textStyle="italic"
+                />
+            <TextView
+                android:id="@+id/show_details_seasonId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                />
+        </LinearLayout>
+</LinearLayout>

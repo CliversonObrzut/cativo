@@ -36,10 +36,9 @@ public class MainActivity extends AppCompatActivity
         toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
         setSupportActionBar(toolbar);
 
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
         getSupportActionBar().setIcon(R.drawable.cativo_logo_24px);
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
@@ -85,7 +84,6 @@ public class MainActivity extends AppCompatActivity
         //Manually displaying the first fragment - one time only
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, ProfileFragment.newInstance());
-        transaction.addToBackStack(null);
         transaction.commit();
     }
 
@@ -166,6 +164,19 @@ public class MainActivity extends AppCompatActivity
         catch (IllegalAccessException e)
         {
             //Timber.e(e, "Unable to change value of shift mode");
+        }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+        {
+            getSupportFragmentManager().popBackStack();
+        }
+        else
+        {
+            super.onBackPressed();
         }
     }
 

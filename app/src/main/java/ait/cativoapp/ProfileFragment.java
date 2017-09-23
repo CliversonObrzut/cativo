@@ -4,14 +4,20 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +30,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.concurrent.ExecutionException;
 
 
@@ -33,6 +40,11 @@ public class ProfileFragment extends Fragment
     View view;
     ProgressBar mySeriesProgressBar;
     LinearLayout mySeriesLayout;
+    RelativeLayout noSeriesLayout;
+    ImageView addButtonImg;
+    HorizontalScrollView mySeriesHorizontalScrollView;
+    int mySeriesQty = 0;
+    int count = 0;
 
     public static ProfileFragment newInstance()
     {
@@ -48,16 +60,39 @@ public class ProfileFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setIcon(R.drawable.cativo_logo_24px);
         if(view == null)
         {
             view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-            mySeriesProgressBar = (ProgressBar) view.findViewById(R.id.progressBar_profile);
-            mySeriesLayout = (LinearLayout) view.findViewById(R.id.my_series_info_linear_layout);
+            mySeriesProgressBar = view.findViewById(R.id.progressBar_profile);
+            mySeriesLayout = view.findViewById(R.id.my_series_info_linear_layout);
+            noSeriesLayout = view.findViewById(R.id.my_series_addButtonLayout);
+            mySeriesHorizontalScrollView = view.findViewById(R.id.my_series_horizontal_scroll);
+            addButtonImg = view.findViewById(R.id.my_series_addButtonImg);
+            addButtonImg.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    Fragment selectedFragment = ExploreFragment.newInstance();
+                    TextView toolbarTitle = getActivity().findViewById(R.id.toolbar_title);
+                    toolbarTitle.setText(R.string.title_explore);
+                    BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.navigation);
+                    bottomNavigationView.setSelectedItemId(R.id.navigation_bot_explore);
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_explore, selectedFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+            });
             mySeriesProgressBar.setVisibility(View.VISIBLE);
             ArrayList<String> mySeries = DB.getMySeries();
             if(mySeries.size() > 0)
             {
+                mySeriesQty = mySeries.size();
                 for (String serieId : mySeries)
                 {
                     new ApiSearchSerieById().execute(serieId);
@@ -66,7 +101,9 @@ public class ProfileFragment extends Fragment
             else
             {
                 mySeriesProgressBar.setVisibility(View.GONE);
-                Toast.makeText(getContext(), "You don't have any series", Toast.LENGTH_LONG).show();
+                mySeriesHorizontalScrollView.setVisibility(View.GONE);
+                noSeriesLayout.setVisibility(View.VISIBLE);
+                Toast.makeText(getContext(), "No favorite series! Add one!", Toast.LENGTH_SHORT).show();
             }
         }
         else
@@ -80,18 +117,14 @@ public class ProfileFragment extends Fragment
     class ApiSearchSerieById extends AsyncTask<String, Void, String>
     {
         API api = new API();
-        private Exception exception;
 
-        protected void onPreExecute()
-        {
-
-        }
+        protected void onPreExecute(){}
 
         protected String doInBackground(String... serieId)
         {
             try
             {
-                URL url = new URL(api.SearchShowById(serieId[0]));
+                URL url = new URL(api.getShowById(serieId[0]));
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 try
                 {
@@ -149,15 +182,41 @@ public class ProfileFragment extends Fragment
 
                         LayoutInflater inflater = LayoutInflater.from(getContext());
                         LinearLayout serieItem = (LinearLayout)inflater.inflate(R.layout.profile_my_series_row_layout, mySeriesLayout, false);
-                        ImageButton serieImg = (ImageButton) serieItem.findViewById(R.id.profile_my_series_img);
-                        TextView serieName = (TextView) serieItem.findViewById(R.id.profile_my_series_name);
+                        ImageButton serieImg = serieItem.findViewById(R.id.profile_my_series_img);
+                        TextView serieName = serieItem.findViewById(R.id.profile_my_series_name);
+                        TextView serieId = serieItem.findViewById(R.id.profile_mySeriesId);
 
                         serieName.setText(ms.getName());
+                        serieId.setText(ms.getId());
                         serieImg.setImageBitmap(ms.getImageBitmap());
 
                         mySeriesLayout.addView(serieItem);
-                        if(mySeriesProgressBar.getVisibility() == View.VISIBLE)
+
+                        serieImg.setOnClickListener(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View view)
+                            {
+                                LinearLayout serieLayout = (LinearLayout) view.getParent();
+                                TextView id = serieLayout.findViewById(R.id.profile_mySeriesId);
+                                String serieId = id.getText().toString();
+                                Fragment selectedFragment = ShowDetailsFragment.newInstance();
+                                Bundle args = new Bundle();
+                                args.putString("serieId", serieId);
+                                selectedFragment.setArguments(args);
+                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                transaction.replace(R.id.fragment_profile, selectedFragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                            }
+                        });
+                        count++;
+
+                        if(count == mySeriesQty)
+                        {
                             mySeriesProgressBar.setVisibility(View.GONE);
+                            mySeriesHorizontalScrollView.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
                 else
@@ -186,10 +245,7 @@ public class ProfileFragment extends Fragment
 
         public DownloadImageTask(){}
 
-        protected void onPreExecute()
-        {
-
-        }
+        protected void onPreExecute(){}
 
         protected Bitmap doInBackground(MySeries... serie)
         {

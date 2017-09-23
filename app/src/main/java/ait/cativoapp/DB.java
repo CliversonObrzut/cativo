@@ -98,7 +98,7 @@ public class DB
             {
                 seriesDB.execSQL("INSERT INTO "+ TABLE_SERIES +" ("+FIELD_SERIEID+")" +
                         "VALUES('"+serieId+"');");
-                Toast.makeText(context, "Serie added!", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Serie added!", Toast.LENGTH_SHORT).show();
             }
             catch (Exception e)
             {
@@ -116,7 +116,7 @@ public class DB
             try
             {
                 seriesDB.execSQL("DELETE FROM "+TABLE_SERIES+" WHERE "+FIELD_SERIEID+" = "+serieId+";");
-                Toast.makeText(context, "Serie removed!", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Serie removed!", Toast.LENGTH_SHORT).show();
             }
             catch(Exception e)
             {

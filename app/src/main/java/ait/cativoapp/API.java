@@ -1,29 +1,42 @@
 package ait.cativoapp;
 
 /**
- * Created by Ana&Cliver on 09/09/2017.
+ * Created by Cliver on 09/09/2017.
  */
 
 public class API
 {
-    private String apiRroot = "http://api.tvmaze.com";
+    private String apiRoot = "http://api.tvmaze.com";
 
     private String apiSearch = "/search/shows?q=";
     private String apiSingleSearch = "/singlesearch/shows?q=";
-    private String apiSearchShowById = "/shows/";
+    private String apiShowById = "/shows/";
+    private String apiShowSeason = "/seasons";
+    private String apiShowEpisodes = "/episodes";
+
 
     public String Search(String query)
     {
-        return apiRroot + apiSearch + query;
+        return apiRoot + apiSearch + query;
     }
 
     public String SingleSearch(String query)
     {
-        return apiRroot + apiSingleSearch + query;
+        return apiRoot + apiSingleSearch + query;
     }
 
-    public String SearchShowById(String id)
+    public String getShowById(String id)
     {
-        return apiRroot + apiSearchShowById + id;
+        return apiRoot + apiShowById + id;
+    }
+
+    public String getShowSeason(String id)
+    {
+        return apiRoot + apiShowById + id + apiShowSeason;
+    }
+
+    public String getShowEpisodes(String id)
+    {
+        return apiRoot + apiShowById + id + apiShowEpisodes;
     }
 }

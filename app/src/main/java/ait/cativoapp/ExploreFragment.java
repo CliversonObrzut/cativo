@@ -5,14 +5,18 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,6 +55,9 @@ public class ExploreFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setIcon(R.drawable.cativo_logo_24px);
         if(view == null)
         {
             view = inflater.inflate(R.layout.fragment_explore, container, false);
@@ -58,13 +65,29 @@ public class ExploreFragment extends Fragment
             searchResultList = (ListView) view.findViewById(R.id.search_result_list_view);
             searchResultProgressBar = (ProgressBar) view.findViewById(R.id.progressBar_explore);
             searchResultLabel = (TextView) view.findViewById(R.id.search_result_label);
-
+            searchResultList.setOnItemClickListener(new AdapterView.OnItemClickListener()
+            {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+                {
+                    TextView id = view.findViewById(R.id.search_result_serieId);
+                    String serieId = id.getText().toString();
+                    Fragment selectedFragment = ShowDetailsFragment.newInstance();
+                    Bundle args = new Bundle();
+                    args.putString("serieId", serieId);
+                    selectedFragment.setArguments(args);
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_explore, selectedFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+            });
             searchViewEditText.setOnQueryTextListener(new SearchView.OnQueryTextListener()
             {
                 @Override
                 public boolean onQueryTextSubmit(String s)
                 {
-                    resultList = new ArrayList<SearchResult>();
+                    resultList = new ArrayList<>();
                     searchResultLabel.setVisibility(View.GONE);
                     searchResultList.setVisibility(View.GONE);
                     searchResultProgressBar.setVisibility(View.VISIBLE);

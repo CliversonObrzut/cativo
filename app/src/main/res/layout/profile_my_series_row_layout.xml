@@ -3,13 +3,15 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:layout_marginLeft="20dp"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:descendantFocusability="blocksDescendants">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="20dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:onClick="showDetails">
         <ImageButton
             android:id="@+id/profile_my_series_img"
             android:layout_width="108dp"
@@ -26,5 +28,10 @@
             android:textColor="@color/cativoColorGreen"
             android:text="Defenders"
             android:textSize="7pt"/>
+        <TextView
+            android:id="@+id/profile_mySeriesId"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
     </LinearLayout>
 </LinearLayout>

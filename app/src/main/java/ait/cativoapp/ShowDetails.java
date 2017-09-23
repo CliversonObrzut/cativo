@@ -3,25 +3,39 @@ package ait.cativoapp;
 import android.graphics.Bitmap;
 
 /**
- * Created by Cliver on 07/09/2017.
+ * Created by Cliver on 21/09/2017.
  */
 
-public class SearchResult
+public class ShowDetails
 {
     private String id;
     private String name;
     private String status;
-    private String imageUrl;
+    private String network;
+    private String premiered;
+    private String genre;
+    private String language;
+    private String seasons;
+    private String officialSite;
+    private String summary;
     private String rate;
     private String country;
+    private String imageUrl;
     private Bitmap imageBitmap = null;
     private boolean isFavorite = false;
 
-    public SearchResult(String id, String name, String rate, String country, String status, String imageUrl)
+    public ShowDetails(String id, String name, String rate, String network, String premiered, String genre, String language, String seasons, String officialSite, String summary, String country, String status, String imageUrl)
     {
         this.id = id;
         this.name = name;
         this.rate = rate;
+        this.network = network;
+        this.premiered = premiered;
+        this.genre = genre;
+        this.language = language;
+        this.seasons = seasons;
+        this.officialSite = officialSite;
+        this.summary = summary;
         this.country = country;
         this.status = status;
         this.imageUrl = imageUrl;
@@ -36,6 +50,41 @@ public class SearchResult
     public String getName()
     {
         return name;
+    }
+
+    public String getNetwork()
+    {
+        return network;
+    }
+
+    public String getPremiered()
+    {
+        return premiered;
+    }
+
+    public String getGenre()
+    {
+        return genre;
+    }
+
+    public String getLanguage()
+    {
+        return language;
+    }
+
+    public String getSeasons()
+    {
+        return seasons;
+    }
+
+    public String getOfficialSite()
+    {
+        return officialSite;
+    }
+
+    public String getSummary()
+    {
+        return summary;
     }
 
     public String getCountry()

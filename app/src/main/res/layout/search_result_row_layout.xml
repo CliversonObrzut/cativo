@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="120dp">
+              android:layout_height="120dp"
+              android:descendantFocusability="blocksDescendants">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -39,7 +40,7 @@
             android:background="@android:color/black"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:focusableInTouchMode="true"
             android:src="@drawable/star_filled_white"
             />
@@ -81,17 +82,24 @@
                     android:id="@+id/search_result_country"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="4"
+                    android:layout_weight="2"
                     android:textSize="6pt"
-                    android:text="USA"
+                    android:text="Korea, Republic of"
                     />
                 <TextView
                     android:id="@+id/search_result_status"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
+                    android:gravity="right"
                     android:textSize="6pt"
-                    android:text="Active"
+                    android:text="In Development"
+                    />
+                <TextView
+                    android:id="@+id/search_result_serieId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
                     />
             </LinearLayout>
         </LinearLayout>

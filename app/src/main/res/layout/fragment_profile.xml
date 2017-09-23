@@ -3,6 +3,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:id="@+id/fragment_profile"
                 >
 
 
@@ -146,12 +147,27 @@
         android:indeterminate="true"
         android:visibility="gone"
         />
-
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/my_series_addButtonLayout"
+        android:layout_below="@id/my_series_label"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/my_series_addButtonImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/plus_button"
+            />
+    </RelativeLayout>
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/my_series_label"
+        android:paddingRight="20dp"
         android:id="@+id/my_series_horizontal_scroll"
+        android:visibility="gone"
         >
         <LinearLayout
             android:id="@+id/my_series_info_linear_layout"
@@ -160,5 +176,6 @@
             android:orientation="horizontal"
             android:layout_marginTop="10dp">
         </LinearLayout>
+
     </HorizontalScrollView>
 </RelativeLayout>
