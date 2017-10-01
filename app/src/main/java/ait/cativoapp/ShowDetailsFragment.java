@@ -4,7 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,6 +36,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
@@ -42,11 +46,15 @@ public class ShowDetailsFragment extends Fragment
 
     View view;
     ProgressBar showDetailsProgressBar;
-    LinearLayout watchedProgressBar;
+    LinearLayout watchedProgressBarLayout;
+    ProgressBar watchedProgressBar;
+    TextView watchedProgressPercentage;
     ScrollView showDetailsScrollView;
     LinearLayout seasonListLayout;
     ArrayList<SeasonListRow> seasonList;
+    BottomNavigationView bottomNav;
 
+    TextView sId;
     TextView sName;
     ImageButton sFavIcon;
     ImageView sImage;
@@ -86,10 +94,15 @@ public class ShowDetailsFragment extends Fragment
             view = inflater.inflate(R.layout.fragment_show_details, container, false);
 
             showDetailsProgressBar = view.findViewById(R.id.progressBar_search_details);
-            watchedProgressBar = view.findViewById(R.id.show_details_watchedPBLayout);
+            watchedProgressBarLayout = view.findViewById(R.id.show_details_watchedPBLayout);
+            watchedProgressBar = view.findViewById(R.id.show_details_watchedProgressBar);
+            watchedProgressPercentage = view.findViewById(R.id.show_details_watchedPercentage);
             showDetailsScrollView = view.findViewById(R.id.show_details_ScrollLayout);
             seasonListLayout = view.findViewById(R.id.show_details_seasonsList);
+            bottomNav = getActivity().findViewById(R.id.navigation);
+            bottomNav.setVisibility(View.GONE);
 
+            sId = view.findViewById(R.id.show_details_serieId);
             sName = view.findViewById(R.id.show_details_serieName);
             sFavIcon = view.findViewById(R.id.show_details_favimg);
             sImage = view.findViewById(R.id.show_details_img);
@@ -108,7 +121,7 @@ public class ShowDetailsFragment extends Fragment
 
             String serieId = getArguments().getString("serieId");
 
-            watchedProgressBar.setVisibility(View.GONE);
+            watchedProgressBarLayout.setVisibility(View.GONE);
             showDetailsScrollView.setVisibility(View.GONE);
             showDetailsProgressBar.setVisibility(View.VISIBLE);
 
@@ -120,6 +133,18 @@ public class ShowDetailsFragment extends Fragment
             parent.removeView(view);
         }
         return view;
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
     }
 
     class ApiSearchSerieById extends AsyncTask<String, Void, String>
@@ -255,7 +280,7 @@ public class ShowDetailsFragment extends Fragment
                             if(lastSeason.getString("premiereDate") == "null")
                                 seasonsTotal--;
                             seasons = Integer.toString(seasonsTotal);
-                            for (int i = 0; i < seasonsJson.length(); i++)
+                            for (int i = 0; i < seasonsTotal; i++)
                             {
                                 JSONObject seasonObj = seasonsJson.getJSONObject(i);
                                 String seasonId = seasonObj.getString("id");
@@ -273,27 +298,80 @@ public class ShowDetailsFragment extends Fragment
                         }
                     }
 
+                    int serieTotalEpisodes =0;
+                    String episodeResponse = new ApiGetShowEpisodes().execute(id).get();
+                    JSONArray episodesJson = new JSONArray(episodeResponse);
+                    if(episodesJson.length() > 0)
+                    {
+                        try
+                        {
+                            int episodesTotal = episodesJson.length();
+                            for(int i = 1; i <= episodesJson.length(); i++)
+                            {
+                                JSONObject lastValidEpisode = episodesJson.getJSONObject(episodesTotal-1);
+                                String airDate = lastValidEpisode.getString("airdate");
+                                if(isEpisodeLaterThanToday(airDate))
+                                    episodesTotal--;
+                                else
+                                    break;
+                            }
+                            serieTotalEpisodes = episodesTotal;
+                            for (SeasonListRow season:seasonList)
+                            {
+                                if(season.getEpisodesQty() == "n/a")
+                                {
+                                    int count = 0;
+                                    for(int i = 0; i < episodesJson.length(); i++)
+                                    {
+                                        JSONObject episodeObject = episodesJson.getJSONObject(i);
+                                        if(episodeObject.getString("season") == season.getNumber())
+                                            count++;
+                                    }
+                                    season.setEpisodesQty(Integer.toString(count));
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+
                     ShowDetails sd = new ShowDetails(id, name, rate, network, premiered, genres, language, seasons, officialSite, summary, country, status, imageURL);
                     if(sd.getImageUrl() == "")
                         sd.setImageUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/No_image_available_400_x_600.svg/2000px-No_image_available_400_x_600.svg.png");
+
+                    int progress = 0;
+                    if(serieTotalEpisodes > 0)
+                    {
+                        ArrayList<String> episodesWatchedList = DB.getEpisodesBySerie(id);
+                        if(episodesWatchedList != null)
+                        {
+                            int episodesWatched = episodesWatchedList.size();
+                            progress = (int) (episodesWatched*100)/serieTotalEpisodes;
+                        }
+                    }
+                    watchedProgressBar.setProgress(progress);
+                    watchedProgressPercentage.setText(progress + "%");
 
                     if(DB.isSerieFavorite(id))
                     {
                         sd.setFavorite(true);
                         sFavIcon.setImageResource(R.drawable.star_filled_yellow);
-                        watchedProgressBar.setVisibility(View.VISIBLE);
+                        watchedProgressBarLayout.setVisibility(View.VISIBLE);
                     }
                     else
                     {
                         sd.setFavorite(false);
                         sFavIcon.setImageResource(R.drawable.star_filled_white);
-                        watchedProgressBar.setVisibility(View.GONE);
+                        watchedProgressBarLayout.setVisibility(View.GONE);
                     }
 
                     sFavIcon.setOnClickListener(new FavoriteClickListener(sd, sFavIcon, getContext(), getView()));
 
                     sd.setImageBitmap(new DownloadImageTask().execute(sd).get());
 
+                    sId.setText(sd.getId());
                     sName.setText(sd.getName());
                     sImage.setImageBitmap(sd.getImageBitmap());
                     sNetwork.setText(sd.getNetwork());
@@ -315,11 +393,42 @@ public class ShowDetailsFragment extends Fragment
                         TextView rowSeasonNumber = seasonRow.findViewById(R.id.show_details_seasonNumber);
                         TextView rowEpisodesQty = seasonRow.findViewById(R.id.show_details_episodesQty);
                         TextView rowSeasonId = seasonRow.findViewById(R.id.show_details_seasonId);
+                        TextView rowShowName = seasonRow.findViewById(R.id.show_details_showName);
 
                         rowSeasonId.setText(row.getId());
                         rowSeasonNumber.setText("Season " + row.getNumber());
                         rowEpisodesQty.setText(row.getEpisodesQty() + " Episodes");
+                        rowShowName.setText(sd.getName());
 
+                        seasonRow.setOnClickListener(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View view)
+                            {
+                                LinearLayout showDetailsView = (LinearLayout) view.getParent().getParent();
+                                TextView serieIdTV = showDetailsView.findViewById(R.id.show_details_serieId);
+                                TextView seasonIdTV = view.findViewById(R.id.show_details_seasonId);
+                                TextView seasonNumberTV = view.findViewById(R.id.show_details_seasonNumber);
+                                TextView showNameTV = view.findViewById(R.id.show_details_showName);
+                                String seasonNumber = seasonNumberTV.getText().toString();
+                                String replace = seasonNumber.replace("Season ","");
+                                seasonNumber = replace;
+                                String serieId = serieIdTV.getText().toString();
+                                String seasonId = seasonIdTV.getText().toString();
+                                String showName = showNameTV.getText().toString();
+                                Fragment selectedFragment = SeasonEpisodeFragment.newInstance();
+                                Bundle args = new Bundle();
+                                args.putString("serieId", serieId);
+                                args.putString("seasonId", seasonId);
+                                args.putString("seasonNumber", seasonNumber);
+                                args.putString("serieName", showName);
+                                selectedFragment.setArguments(args);
+                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                transaction.replace(R.id.fragment_showDetails, selectedFragment,"ShowDetailsFragment");
+                                transaction.addToBackStack("ShowDetailsFragment");
+                                transaction.commit();
+                            }
+                        });
                         seasonListLayout.addView(seasonRow);
                     }
                     showDetailsScrollView.setVisibility(View.VISIBLE);
@@ -355,6 +464,14 @@ public class ShowDetailsFragment extends Fragment
             String result = writeFormatter.format(dateParsed);
             return result;
         }
+        private boolean isEpisodeLaterThanToday(String date) throws ParseException
+        {
+            SimpleDateFormat readFormatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date dateParsed = readFormatter.parse(date);
+            if(dateParsed.after(Calendar.getInstance().getTime()))
+                return true;
+            return false;
+        }
     }
 
     class ApiGetShowSeasons extends AsyncTask<String, Void, String>
@@ -368,6 +485,45 @@ public class ShowDetailsFragment extends Fragment
             try
             {
                 URL url = new URL(api.getShowSeason(serieId[0]));
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                try
+                {
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null)
+                    {
+                        stringBuilder.append(line).append("\n");
+                    }
+                    bufferedReader.close();
+                    return stringBuilder.toString();
+                }
+                finally
+                {
+                    urlConnection.disconnect();
+                }
+            }
+            catch(Exception e)
+            {
+                Log.e("ERROR", e.getMessage(), e);
+                return null;
+            }
+        }
+
+        protected void onPostExecute(String response){}
+    }
+
+    class ApiGetShowEpisodes extends AsyncTask<String, Void, String>
+    {
+        API api = new API();
+
+        protected void onPreExecute(){}
+
+        protected String doInBackground(String... serieId)
+        {
+            try
+            {
+                URL url = new URL(api.getShowEpisodes(serieId[0]));
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 try
                 {

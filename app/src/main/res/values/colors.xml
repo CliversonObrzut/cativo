@@ -8,6 +8,8 @@
     <color name="cativoColorYellow">#c1b508</color>
     <color name="cativoColorGreen">#FF80CBC4</color>
     <color name="cativoBackground">#FF303030</color>
+    <color name="cativoTextColorWhite">#FFFFFF</color>
+    <color name="cativoTextColorBlack">#000000</color>
 </resources>
 
 

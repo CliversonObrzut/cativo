@@ -1,10 +1,14 @@
 package ait.cativoapp;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -18,6 +22,8 @@ public class FavoriteClickListener implements View.OnClickListener
     ImageButton starButton;
     Context context;
     LinearLayout progressBarLayout;
+    ProgressBar serieProgressBar;
+    TextView serieProgressBarPercentage;
 
     public FavoriteClickListener(SearchResult result, ImageButton starButton, Context context )
     {
@@ -32,6 +38,8 @@ public class FavoriteClickListener implements View.OnClickListener
         this.starButton = starButton;
         this.context = context;
         progressBarLayout = view.findViewById(R.id.show_details_watchedPBLayout);
+        serieProgressBar = progressBarLayout.findViewById(R.id.show_details_watchedProgressBar);
+        serieProgressBarPercentage = progressBarLayout.findViewById(R.id.show_details_watchedPercentage);
     }
 
     @Override
@@ -57,9 +65,7 @@ public class FavoriteClickListener implements View.OnClickListener
             {
                 try
                 {
-                    DB.DeleteSerie(result.getId());
-                    starButton.setImageResource(R.drawable.star_filled_white);
-                    result.setFavorite(false);
+                    showDeleteDialog(view);
                 }
                 catch (Exception e)
                 {
@@ -89,10 +95,7 @@ public class FavoriteClickListener implements View.OnClickListener
             {
                 try
                 {
-                    DB.DeleteSerie(details.getId());
-                    starButton.setImageResource(R.drawable.star_filled_white);
-                    details.setFavorite(false);
-                    progressBarLayout.setVisibility(View.GONE);
+                    showDeleteDialog(view);
                 }
                 catch (Exception e)
                 {
@@ -101,7 +104,53 @@ public class FavoriteClickListener implements View.OnClickListener
                 }
             }
         }
+    }
 
-       //adapter.notifyDataSetChanged();
+    public void showDeleteDialog(View view)
+    {
+        final AlertDialog.Builder deleteDialog = new AlertDialog.Builder(view.getContext());
+        deleteDialog.setTitle("Remove Favourite Serie");
+        deleteDialog.setMessage("Are you sure you want to remove this serie and all watched episodes?");
+        if(result != null)
+        {
+            deleteDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i)
+                {
+                    DB.DeleteSerie(result.getId());
+                    DB.deleteSerieSeasonEpisodes(result.getId());
+                    starButton.setImageResource(R.drawable.star_filled_white);
+                    result.setFavorite(false);
+                }
+            });
+        }
+        if(details != null)
+        {
+            deleteDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i)
+                {
+                    DB.DeleteSerie(details.getId());
+                    DB.deleteSerieSeasonEpisodes(details.getId());
+                    starButton.setImageResource(R.drawable.star_filled_white);
+                    details.setFavorite(false);
+                    progressBarLayout.setVisibility(View.GONE);
+                    serieProgressBar.setProgress(0);
+                    serieProgressBarPercentage.setText("0%");
+                }
+            });
+        }
+        deleteDialog.setNegativeButton("No", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                dialogInterface.dismiss();
+            }
+        });
+
+        deleteDialog.show();
     }
 }

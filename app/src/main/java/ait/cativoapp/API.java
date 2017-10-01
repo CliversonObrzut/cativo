@@ -13,6 +13,7 @@ public class API
     private String apiShowById = "/shows/";
     private String apiShowSeason = "/seasons";
     private String apiShowEpisodes = "/episodes";
+    private String apiSeasonEpisodes = "/seasons/";
 
 
     public String Search(String query)
@@ -38,5 +39,10 @@ public class API
     public String getShowEpisodes(String id)
     {
         return apiRoot + apiShowById + id + apiShowEpisodes;
+    }
+
+    public String getSeasonEpisodes(String seasonId)
+    {
+        return apiRoot + apiSeasonEpisodes + seasonId + apiShowEpisodes;
     }
 }

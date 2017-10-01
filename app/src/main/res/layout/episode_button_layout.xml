@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:id="@+id/episode_buttonLayout"
+              android:clickable="true"
+              android:descendantFocusability="blocksDescendants">
+
+    <TextView
+        android:id="@+id/episode_buttonText"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:text="1"
+        android:textSize="8pt"
+        android:clickable="false"
+        android:textColor="@color/episode_button_text_color"
+        android:background="@drawable/episode_button_background"
+        android:gravity="center_horizontal|center_vertical"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/episode_buttonEpId"
+        android:visibility="gone"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/episode_buttonSerieId"
+        android:visibility="gone"
+        />
+</LinearLayout>

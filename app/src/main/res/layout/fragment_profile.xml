@@ -158,6 +158,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:background="@color/cativoBackground"
+            android:clickable="true"
             android:src="@drawable/plus_button"
             />
     </RelativeLayout>

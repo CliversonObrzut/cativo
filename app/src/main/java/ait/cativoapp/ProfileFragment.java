@@ -43,6 +43,8 @@ public class ProfileFragment extends Fragment
     RelativeLayout noSeriesLayout;
     ImageView addButtonImg;
     HorizontalScrollView mySeriesHorizontalScrollView;
+    TextView episodesWatchedTV;
+    TextView totalTimeSpentTV;
     int mySeriesQty = 0;
     int count = 0;
 
@@ -70,6 +72,8 @@ public class ProfileFragment extends Fragment
             mySeriesProgressBar = view.findViewById(R.id.progressBar_profile);
             mySeriesLayout = view.findViewById(R.id.my_series_info_linear_layout);
             noSeriesLayout = view.findViewById(R.id.my_series_addButtonLayout);
+            episodesWatchedTV = view.findViewById(R.id.episodes_watched_text);
+            totalTimeSpentTV = view.findViewById(R.id.total_time_spent_text);
             mySeriesHorizontalScrollView = view.findViewById(R.id.my_series_horizontal_scroll);
             addButtonImg = view.findViewById(R.id.my_series_addButtonImg);
             addButtonImg.setOnClickListener(new View.OnClickListener()
@@ -83,13 +87,20 @@ public class ProfileFragment extends Fragment
                     BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.navigation);
                     bottomNavigationView.setSelectedItemId(R.id.navigation_bot_explore);
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_explore, selectedFragment);
+                    transaction.replace(R.id.frame_layout, selectedFragment);
                     transaction.addToBackStack(null);
                     transaction.commit();
                 }
             });
             mySeriesProgressBar.setVisibility(View.VISIBLE);
             ArrayList<String> mySeries = DB.getMySeries();
+
+            ArrayList<String> episodesWatched = DB.getEpisodesWatched();
+            episodesWatchedTV.setText(Integer.toString(episodesWatched.size()));
+
+            ArrayList<String> episodesRuntime = DB.getRuntimes();
+            totalTimeSpentTV.setText(getTimeSpent(episodesRuntime));
+
             if(mySeries.size() > 0)
             {
                 mySeriesQty = mySeries.size();
@@ -103,7 +114,7 @@ public class ProfileFragment extends Fragment
                 mySeriesProgressBar.setVisibility(View.GONE);
                 mySeriesHorizontalScrollView.setVisibility(View.GONE);
                 noSeriesLayout.setVisibility(View.VISIBLE);
-                Toast.makeText(getContext(), "No favorite series! Add one!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "No favorite series! Add one!", Toast.LENGTH_LONG).show();
             }
         }
         else
@@ -112,6 +123,50 @@ public class ProfileFragment extends Fragment
             parent.removeView(view);
         }
         return view;
+    }
+
+    public String getTimeSpent(ArrayList<String> episodesRuntime)
+    {
+        int totalRuntime = 0;
+        String timeSpent = "";
+        int days=0, hours=0, min=0;
+
+        if(episodesRuntime.size() > 0)
+        {
+            for (String runtime : episodesRuntime)
+            {
+                if(runtime != "n/a")
+                {
+                    int runtimeInt = Integer.parseInt(runtime);
+                    totalRuntime = totalRuntime + runtimeInt;
+                }
+            }
+
+            boolean check = false;
+            int remaining = 0;
+            if(totalRuntime / 1440 >= 1) // one day has 1440 minutes
+            {
+                days = (int) totalRuntime / 1440;
+                remaining = (totalRuntime % 1440);
+                check = true;
+            }
+            if(check == true)
+            {
+                totalRuntime = remaining;
+                check = false;
+            }
+            if(totalRuntime / 60 >= 1) // check if it´s bigger than a hour
+            {
+                hours = (int) totalRuntime / 60;
+                remaining = (totalRuntime % 60);
+                check = true;
+            }
+            if(check == true)
+                totalRuntime = remaining;
+            min = totalRuntime;
+        }
+        timeSpent = days+"D : "+hours+"H : "+min+"M";
+        return timeSpent;
     }
 
     class ApiSearchSerieById extends AsyncTask<String, Void, String>
@@ -205,8 +260,8 @@ public class ProfileFragment extends Fragment
                                 args.putString("serieId", serieId);
                                 selectedFragment.setArguments(args);
                                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                                transaction.replace(R.id.fragment_profile, selectedFragment);
-                                transaction.addToBackStack(null);
+                                transaction.replace(R.id.fragment_profile, selectedFragment, "ProfileFragment");
+                                transaction.addToBackStack("ProfileFragment");
                                 transaction.commit();
                             }
                         });

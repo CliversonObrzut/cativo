@@ -16,7 +16,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,10 +60,10 @@ public class ExploreFragment extends Fragment
         if(view == null)
         {
             view = inflater.inflate(R.layout.fragment_explore, container, false);
-            searchViewEditText = (SearchView) view.findViewById(R.id.search_edit_text);
-            searchResultList = (ListView) view.findViewById(R.id.search_result_list_view);
-            searchResultProgressBar = (ProgressBar) view.findViewById(R.id.progressBar_explore);
-            searchResultLabel = (TextView) view.findViewById(R.id.search_result_label);
+            searchViewEditText = view.findViewById(R.id.search_edit_text);
+            searchResultList = view.findViewById(R.id.search_result_list_view);
+            searchResultProgressBar = view.findViewById(R.id.progressBar_explore);
+            searchResultLabel = view.findViewById(R.id.search_result_label);
             searchResultList.setOnItemClickListener(new AdapterView.OnItemClickListener()
             {
                 @Override
@@ -77,8 +76,8 @@ public class ExploreFragment extends Fragment
                     args.putString("serieId", serieId);
                     selectedFragment.setArguments(args);
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_explore, selectedFragment);
-                    transaction.addToBackStack(null);
+                    transaction.replace(R.id.fragment_explore, selectedFragment,"ExploreFragment");
+                    transaction.addToBackStack("ExploreFragment");
                     transaction.commit();
                 }
             });
@@ -114,12 +113,8 @@ public class ExploreFragment extends Fragment
     {
         String search = searchViewEditText.getQuery().toString();
         API api = new API();
-        private Exception exception;
 
-        protected void onPreExecute()
-        {
-
-        }
+        protected void onPreExecute(){}
 
         protected String doInBackground(Void... urls)
         {
